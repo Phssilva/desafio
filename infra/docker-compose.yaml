@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  db:
+    build: ./db
+    container_name: postgres_container
+    environment:
+      POSTGRES_USER: brain_agriculture
+      POSTGRES_PASSWORD: 123456
+      POSTGRES_DB: brain-agriculture
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5433:5432"
+
+  backend:
+    build: ../back-end
+    container_name: backend_container
+    depends_on:
+      - db
+    environment:
+      DATABASE_URL: postgresql://brain_agriculture:123456@postgres_container:5432/brain-agriculture
+
+    ports:
+      - "8000:8000"
+
+  frontend:
+    build: ../front-end
+    container_name: frontend_container
+    depends_on:
+      - backend
+    ports:
+      - "8501:8501"
+
+volumes:
+  postgres_data:

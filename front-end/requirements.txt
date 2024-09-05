@@ -1,0 +1,7 @@
+streamlit
+requests
+pandas
+streamlit-aggrid
+matplotlib
+plotly
+validate-docbr
