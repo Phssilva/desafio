@@ -5,15 +5,14 @@ from app.config.database import SessionLocal, engine, Base
 from app.schemas import ProdutorCreate, ProdutorRead
 from faker import Faker
 
-# Inicializa o FastAPI
+
 app = FastAPI()
 
-# Cria as tabelas no banco de dados
+
 print("Criando tabelas no banco de dados")
 Base_db.metadata.create_all(bind=engine)
 
 
-# Dependência para obter a sessão do banco de dados
 def get_db():
     db = SessionLocal()
     try:
@@ -25,7 +24,6 @@ def get_db():
 # Rota para criar um novo produtor
 @app.post("/produtores/", response_model=ProdutorRead)
 def create_produtor(produtor: ProdutorCreate, db: Session = Depends(get_db)):
-    # Valida se o CPF ou CNPJ já está cadastrado
     db_produtor = (
         db.query(Produtor).filter(Produtor.cpf_cnpj == produtor.cpf_cnpj).first()
     )
@@ -33,7 +31,6 @@ def create_produtor(produtor: ProdutorCreate, db: Session = Depends(get_db)):
     if db_produtor:
         raise HTTPException(status_code=400, detail="CPF ou CNPJ já cadastrado")
 
-    # Valida se a soma das áreas é maior que a área total
     if produtor.area_agricultavel + produtor.area_vegetacao > produtor.area_total:
         raise HTTPException(
             status_code=400,
@@ -69,7 +66,6 @@ def create_mock_produtores(qty: int = 10, db: Session = Depends(get_db)):
             ),
         )
 
-        # Ajusta as áreas para garantir que a soma não seja maior que a área total
         while (
             produtor_data.area_agricultavel + produtor_data.area_vegetacao
             > produtor_data.area_total
@@ -114,7 +110,6 @@ def update_produtor(
     if not db_produtor:
         raise HTTPException(status_code=404, detail="Produtor não encontrado")
 
-    # Valida se a soma das áreas é maior que a área total
     if produtor.area_agricultavel + produtor.area_vegetacao > produtor.area_total:
         raise HTTPException(
             status_code=400,

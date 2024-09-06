@@ -58,7 +58,6 @@ def dashboard(produtores):
 
     st.markdown("---")
 
-    # Gráfico de Pizza por Estado
     st.subheader("Distribuição de Fazendas por Estado")
     estado_counts = df["estado"].value_counts().reset_index()
     estado_counts.columns = ["Estado", "Quantidade"]
@@ -67,7 +66,6 @@ def dashboard(produtores):
     )
     st.plotly_chart(fig_estado, use_container_width=True)
 
-    # Gráfico de Pizza por Cultura
     st.subheader("Distribuição de Culturas Plantadas")
     culturas_exploded = df.explode("culturas_plantadas")  # contar individualmente
     cultura_counts = (
@@ -79,7 +77,6 @@ def dashboard(produtores):
     )
     st.plotly_chart(fig_cultura, use_container_width=True)
 
-    # Gráfico de Pizza por Uso de Solo
     st.subheader("Distribuição de Uso de Solo")
     uso_solo = pd.DataFrame(
         {
